@@ -15,7 +15,7 @@ const Expenses = (props) => {
 
   const filterExpensesByYear = useMemo(() => {
     return props.items.filter((expense) => {
-      if (filteredYear === "") {
+      if (filteredYear === "" || filteredYear === "All") {
         return expense;
       }
       return expense.date.getFullYear().toString() === filteredYear;

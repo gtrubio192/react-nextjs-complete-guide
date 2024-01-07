@@ -29,7 +29,6 @@ const App = () => {
   const [expenses, setExpenses] = useState(expensesList);
 
   const addExpenseHandler = expense => {
-    console.log('In App.js');
     setExpenses(prevExpenses => {
       return [expense, ...prevExpenses];
     });
@@ -38,6 +37,10 @@ const App = () => {
 
   return (
     <div>
+      {/* 
+        Add React Context to globally manage the state of the expenses list.
+        Removes prop drilling.
+      */}
       <NewExpense onAddExpense={addExpenseHandler} />
       <Expenses items={expenses} />
     </div>

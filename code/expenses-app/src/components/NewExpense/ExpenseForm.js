@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import './ExpenseForm.css';
 
-const ExpenseForm = (props) => {
+const ExpenseForm = ({onSaveExpenseData, onCancel}) => {
   const [enteredTitle, setEnteredTitle] = useState('');
   const [enteredAmount, setEnteredAmount] = useState('');
   const [enteredDate, setEnteredDate] = useState('');
@@ -12,12 +12,23 @@ const ExpenseForm = (props) => {
   //   enteredDate: '',
   // });
 
+  /** NOTE:
+   * 
+   * Updating State that Depends on Previous State:
+      React *schedules* state updates and doesn't do so instantly when you update state. 
+      Pass in the prevState in order to get the *most up to date* snapshot into the new state
+   */
   const titleChangeHandler = (event) => {
     setEnteredTitle(event.target.value);
+
+    // Scenario: updating form object all at once using setUserInput
+    // Ok, but not guaranteed to be the most up to date snapshot of the state
     // setUserInput({
     //   ...userInput,
     //   enteredTitle: event.target.value,
     // });
+
+    // Best practice: use the function form of setState
     // setUserInput((prevState) => {
     //   return { ...prevState, enteredTitle: event.target.value };
     // });
@@ -48,7 +59,7 @@ const ExpenseForm = (props) => {
       date: new Date(enteredDate),
     };
 
-    props.onSaveExpenseData(expenseData);
+    onSaveExpenseData(expenseData);
     setEnteredTitle('');
     setEnteredAmount('');
     setEnteredDate('');
@@ -87,7 +98,7 @@ const ExpenseForm = (props) => {
         </div>
       </div>
       <div className='new-expense__actions'>
-        <button onClick={() => props.onCancel(false)}>Cancel</button>
+        <button onClick={() => onCancel(false)}>Cancel</button>
       </div>
       <div className='new-expense__actions'>
         <button type='submit'>Add Expense</button>
