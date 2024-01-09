@@ -56,14 +56,18 @@ export default function Examples() {
   );
 
   /** This is how you handle 'Multiple JSX slots'
-   * 
    * Pass in tabContent as the children, and tab buttons as a component in props
-   * 
+   *
    */
   return (
     <Section title={"Examples"} id="examples">
-      <Tabs buttons={<ButtonsComponent />} />
-      {tabContent}
+      {/* 
+      Pass in built-in html containers as string
+      Could also pass in React component "function name" ex) buttonsContainer={Section} 
+      */}
+      <Tabs buttons={<ButtonsComponent />} buttonsContainer={"menu"}>
+        {tabContent}
+      </Tabs>
     </Section>
   );
 }
