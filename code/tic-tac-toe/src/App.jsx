@@ -3,19 +3,31 @@ import GameBoard from "./components/GameBoard";
 
 import Player from "./components/Player";
 import Log from "./components/Log";
+import { WINNING_COMBINATIONS } from "./winning-combinations";
 
+function deriveActivePlayer(gameTurns) {
+  let currentPlayer = "X";
+  if (gameTurns[0]?.player === "X") {
+    currentPlayer = "O";
+  }
+  return currentPlayer;
+}
 function App() {
-  const [activePlayer, setActivePlayer] = useState("X");
+  // const [activePlayer, setActivePlayer] = useState("X");
   const [gameTurns, setGameTurns] = useState([]);
+
+  const activePlayer = deriveActivePlayer(gameTurns);
+
+  for(const combo of WINNING_COMBINATIONS) {
+    
+  }
+   
   const handleSelectSquare = (x, y) => {
-    setActivePlayer((currPlayer) => (currPlayer === "X" ? "O" : "X"));
+    // setActivePlayer((currPlayer) => (currPlayer === "X" ? "O" : "X"));
     setGameTurns((prevTurns) => {
-      // AVOID derived states, prefer *computed values*
+      // prefer *computed values*
       // Dont know if activePlayer is updated yet
-      let currentPlayer = "X";
-      if (prevTurns[0]?.player === "X") {
-        currentPlayer = "O";
-      }
+      let currentPlayer = deriveActivePlayer(prevTurns);
       // Immutable state
       const updatedTurns = [
         { square: { row: x, col: y }, player: currentPlayer },
@@ -34,11 +46,11 @@ function App() {
           <Player name="Player 2" symbol="O" activePlayer={activePlayer} />
         </ol>
         <GameBoard
-          symbol={activePlayer}
+          turns={gameTurns}
           handlePlayerSwitch={handleSelectSquare}
         />
       </div>
-      <Log />
+      <Log turns={gameTurns}/>
     </main>
   );
 }

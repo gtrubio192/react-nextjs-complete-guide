@@ -4,27 +4,27 @@ const initialGameBoard = [
   [null, null, null],
   [null, null, null],
 ];
-const GameBoard = ({ handlePlayerSwitch}) => {
-  // const [gameboard, setGameBoard] = useState(initialGameBoard);
-  // const handleSelectedSquare = (x,y,) => {
+const GameBoard = ({ handlePlayerSwitch, turns}) => {
+
   //   if(gameboard[x][y]) return;
-  //   // Update state in *immutable way* by copying value of prev state
-  //   setGameBoard(prev => {
-  //     const updatedBoard = [...prev.map(innerArray => [...innerArray])];
-  //     updatedBoard[x][y] = symbol;
-  //     return updatedBoard;
-  //   });
-  //   handlePlayerSwitch()
-  // }
-  
+
+  // Deriving state from props
+  let gameBoard = initialGameBoard;
+  for(const turn of turns) {
+    const { square, player } = turn;
+    const { row, col } = square;
+    gameBoard[row][col] = player
+  }
   return (
     <ol id="game-board">
-      {gameboard.map((row, x) => (
+      {gameBoard.map((row, x) => (
         <li key={x}>
           <ol>
             {row.map((symbol, y) => (
               <li key={y}>
-                <button onClick={() => handlePlayerSwitch(x,y)}>{symbol}</button>
+                <button 
+                disabled={symbol !== null}
+                onClick={() => handlePlayerSwitch(x,y)}>{symbol}</button>
               </li>
             ))}
           </ol>
