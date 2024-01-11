@@ -3,6 +3,7 @@ import GameBoard from "./components/GameBoard";
 
 import Player from "./components/Player";
 import Log from "./components/Log";
+import GameOver from "./components/GameOver";
 import { WINNING_COMBINATIONS } from "./winning-combinations";
 
 const initialGameBoard = [
@@ -11,9 +12,9 @@ const initialGameBoard = [
   [null, null, null],
 ];
 function deriveActivePlayer(gameTurns) {
-  let currentPlayer = 'X';
-  if (gameTurns.length > 0 && gameTurns[0].player === 'X') {
-    currentPlayer = 'O';
+  let currentPlayer = "X";
+  if (gameTurns.length > 0 && gameTurns[0].player === "X") {
+    currentPlayer = "O";
   }
   return currentPlayer;
 }
@@ -23,7 +24,8 @@ function App() {
   const activePlayer = deriveActivePlayer(gameTurns);
 
   // Deriving/computing gameboard
-  let gameBoard = initialGameBoard;
+  // Decouple init state by passing in a new array
+  let gameBoard = [...initialGameBoard.map(arr => [...arr])];
   // Compute gameBoard from gameTurns
   for (const turn of gameTurns) {
     const { square, player } = turn;
@@ -32,7 +34,7 @@ function App() {
     gameBoard[row][col] = player;
   }
 
-  // App will re-render after every turn, check winning combos
+  // App will re-render after every turn, check winning combos or draw
   let winner;
   for (const combination of WINNING_COMBINATIONS) {
     const firstSquareSymbol =
@@ -51,6 +53,9 @@ function App() {
     }
   }
 
+  // Check for draw
+  const hasDraw = gameTurns.length === 9 && !winner;
+
   const handleSelectSquare = (x, y) => {
     setGameTurns((prevTurns) => {
       // prefer *computed values*
@@ -65,6 +70,11 @@ function App() {
     });
   };
 
+  const handleReset = () => {
+    setGameTurns([]);
+  }
+  
+
   return (
     <main>
       <div id="game-container">
@@ -73,9 +83,7 @@ function App() {
           <Player name="Player 1" symbol="X" activePlayer={activePlayer} />
           <Player name="Player 2" symbol="O" activePlayer={activePlayer} />
         </ol>
-        {
-          winner && <p>You won, {winner}!</p>
-        }
+        {(winner || hasDraw) && <GameOver winner={winner} onReset={handleReset} />}
         <GameBoard
           turns={gameTurns}
           handlePlayerSwitch={handleSelectSquare}
