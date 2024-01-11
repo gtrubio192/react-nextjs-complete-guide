@@ -1,11 +1,10 @@
 import React, {useState} from "react";
 
-const GameBoard = ({ handlePlayerSwitch, turns}) => {
+const GameBoard = ({ handlePlayerSwitch, board}) => {
 
-  //   if(gameboard[x][y]) return;
   return (
     <ol id="game-board">
-      {gameBoard.map((row, x) => (
+      {board.map((row, x) => (
         <li key={x}>
           <ol>
             {row.map((symbol, y) => (
