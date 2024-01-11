@@ -24,24 +24,7 @@ function deriveActivePlayer(gameTurns) {
   return currentPlayer;
 }
 
-function App() {
-  const [gameTurns, setGameTurns] = useState([]);
-  const [players, setPlayers] = useState(PLAYERS);
-
-  const activePlayer = deriveActivePlayer(gameTurns);
-
-  // Deriving/computing gameboard
-  // Decouple init state by passing in a new array
-  let gameBoard = [...initialGameBoard.map((arr) => [...arr])];
-  // Compute gameBoard from gameTurns
-  for (const turn of gameTurns) {
-    const { square, player } = turn;
-    const { row, col } = square;
-
-    gameBoard[row][col] = player;
-  }
-
-  // App will re-render after every turn, check winning combos or draw
+const deriveWinner = (gameBoard, players) => {
   let winner;
   for (const combination of WINNING_COMBINATIONS) {
     const firstSquareSymbol =
@@ -59,16 +42,45 @@ function App() {
       winner = players[firstSquareSymbol]
     }
   }
+  return winner;
+}
+
+const deriveGameBoard = (gameTurns) => {
+  // Decouple init state reference in memory by passing in a new array
+  let gameBoard = [...initialGameBoard.map((arr) => [...arr])];
+  // Compute gameBoard from gameTurns
+  for (const turn of gameTurns) {
+    const { square, player } = turn;
+    const { row, col } = square;
+
+    gameBoard[row][col] = player;
+  }
+  return gameBoard;
+}
+
+
+
+function App() {
+  const [gameTurns, setGameTurns] = useState([]);
+  const [players, setPlayers] = useState(PLAYERS);
+
+  const activePlayer = deriveActivePlayer(gameTurns);
+
+  // Deriving/computing gameboard
+  const gameBoard = deriveGameBoard(gameTurns);
+
+  // App will re-render after every turn, check winning combos or draw
+  const winner = deriveWinner(gameBoard, players)
 
   // Check for draw
   const hasDraw = gameTurns.length === 9 && !winner;
 
   const handleSelectSquare = (x, y) => {
     setGameTurns((prevTurns) => {
-      // prefer *computed values*
+      // Prefer *computed values*
       // Dont know if activePlayer is updated yet
       let currentPlayer = deriveActivePlayer(prevTurns);
-      // Immutable state
+      // Immutable state - create new array obj for new turns
       const updatedTurns = [
         { square: { row: x, col: y }, player: currentPlayer },
         ...prevTurns,
@@ -109,7 +121,7 @@ function App() {
           />
         </ol>
         {(winner || hasDraw) && (
-          <GameOver winner={winner} onReset={handleReset} />
+          <GameOver winner={winner} onReset={() => setGameTurns([]) } />
         )}
         <GameBoard
           turns={gameTurns}
