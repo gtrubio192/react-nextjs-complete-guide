@@ -1,20 +1,8 @@
 import React, {useState} from "react";
-const initialGameBoard = [
-  [null, null, null],
-  [null, null, null],
-  [null, null, null],
-];
+
 const GameBoard = ({ handlePlayerSwitch, turns}) => {
 
   //   if(gameboard[x][y]) return;
-
-  // Deriving state from props
-  let gameBoard = initialGameBoard;
-  for(const turn of turns) {
-    const { square, player } = turn;
-    const { row, col } = square;
-    gameBoard[row][col] = player
-  }
   return (
     <ol id="game-board">
       {gameBoard.map((row, x) => (

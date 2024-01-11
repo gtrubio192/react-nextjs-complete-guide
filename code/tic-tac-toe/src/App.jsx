@@ -12,18 +12,34 @@ function deriveActivePlayer(gameTurns) {
   }
   return currentPlayer;
 }
+
+const initialGameBoard = [
+  [null, null, null],
+  [null, null, null],
+  [null, null, null],
+];
+
 function App() {
   // const [activePlayer, setActivePlayer] = useState("X");
   const [gameTurns, setGameTurns] = useState([]);
 
   const activePlayer = deriveActivePlayer(gameTurns);
-
+  
+  // Deriving gameboard
+  let gameBoard = initialGameBoard;
+  for(const turn of gameTurns) {
+    const { square, player } = turn;
+    const { row, col } = square;
+    gameBoard[row][col] = player
+  }
+  // App will re-render after every turn, check winning combos
   for(const combo of WINNING_COMBINATIONS) {
-    
+    const firstSquareSymbol = 
+    const secondSquareSymbol =
+    const thirdSquareSymbol =
   }
    
   const handleSelectSquare = (x, y) => {
-    // setActivePlayer((currPlayer) => (currPlayer === "X" ? "O" : "X"));
     setGameTurns((prevTurns) => {
       // prefer *computed values*
       // Dont know if activePlayer is updated yet
